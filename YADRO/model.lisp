@@ -3,6 +3,10 @@
 
 ;;; Expressions
 
+(typedef "primary expression"
+         (uniont "identifier"
+                 "constant"))
+
 (typedef "postfix expression"
          (uniont "primary expression"
                  "1[2]"))
