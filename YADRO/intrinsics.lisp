@@ -15,8 +15,7 @@
                     :av 2 (mo "1<=2" :av 1 "i" :av 2  7)) 
                 :av 2 (mo "1==2" 
                     :av 1 "\\result.e[i]"  ; ?
-                    :av 2 0.0))))
-)
+                    :av 2 0.0)))))
 
 ; __mm256 _mm256_set1_ps(float v);
 (mo "func decl" 
@@ -35,8 +34,7 @@
                     :av 2 (mo "1<=2" :av 1 "i" :av 2  7)) 
                 :av 2 (mo "1==2" 
                     :av 1 "\\result.e[i]" ; ?
-                    :av 2 "v"))))
-)
+                    :av 2 "v")))))
 
 ; void _mm256_storeu_ps(float* mem_addr, __mm256 a);
 (mo "func decl" 
@@ -58,5 +56,4 @@
                     :av 2 (mo "1<=2" :av 1 "i" :av 2  7)) 
                 :av 2 (mo "1==2" 
                     :av 1 (mo "pointer access" :av 1 "mem_addr" :av 2 "i")
-                    :av 2 "v"))))
-)
+                    :av 2 "v")))))
