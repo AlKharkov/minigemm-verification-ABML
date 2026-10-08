@@ -1,54 +1,190 @@
-; Names
-(typedef "name" string)
-(typedef "variable name" string)
-(typedef "function name" string)
+;;;; ABML model of the small C fragment employed by gemm_v0, gemm_v1, and gemm_v2.
+;;;; As close to ISO/IEC 9899:2017 (a draft of C17) as possible.
 
+;;; Expressions
 
-; Types
-(typedef "type" (uniont "int type" "float* type" "const float* type" "void"))
-(cot "int type")
-(cot "float* type")
-(cot "const float* type")
-(cot "void")
+(typedef "postfix expression"
+         (uniont "primary expression"
+                 "1[2]"))
 
+(mot "1[2]"
+     ;; Array subscripting.
+     :at 1 "postfix expression"
+     :at 2 "expression")
 
-; Expressions
-(typedef "expression" (uniont "C value" "variable acces" "1<2" "1+2"))
-(typedef "C value" (uniont bool int real))
-(mot "variable acces" :at 1 "variable name")
-(mot "1<2" :at 1 "expression" :at 2 "expression")
-(mot "1+2" :at 1 "expression" :at 2 "expression")
-(mot "pointer access" :at 1 "variable name" :at 2 "expression")
+(typedef "unary expression"
+         (uniont "postfix expression"
+                 "++1"))
 
+(mot "++1"
+     :at 1 "unary expression")
 
-; Statements
-(typedef "statement" (uniont "++1" "for stmt" "var decl" "1=2" "1+=2"))
-(cot "++1" :at 1 "variable name")
-(mot "for stmt" :at "init" "statement" :at "condition" "expression" :at "post" "statement" :at "body" "block")
-(mot "block" :at "sts" (listt "statement"))
-(mot "var decl" :at "type" "type" :at "name" "variable name" :at "value" "expression")
-(mot "1=2" :at 1 "expression" :at 2 "expression")
-(mot "1+=2" :at 1 "expression" :at 2 "expression")
+(typedef "cast expression"
+         (uniont "unary expression"))
 
+(typedef "multiplicative expression"
+         (uniont "cast expression"
+                 "1 * 2"))
 
-; Annotating constructions
-; Может убрать из имени "formula" типов позиционную нотацию (например, "forall12" -> "forall")?
-(typedef "formula" (uniont "and1" "or1" "not1" "exists1" "forall12" "pcall12"))
-(cot "and1" :at 1 (listt "formula"))
-(cot "or1" :at 1 (listt "formula"))
-(cot "not1" :at 1 "formula")
-(cot "exists12" :at 1 "variable name" :at 2 "formula")
-(cot "forall12" :at 1 "variable name" :at 2 "formula")
-(cot "pcall12" :at 1 "name" :at 2 (listt "term"))
+(mot "1 * 2"
+     :at 1 "multiplicative expression"
+     :at 2 "cast expression")
 
-(cot "range" :at 1 "variable name" :at 2 "expression" :at 3 "expression") ; mem_addr + (0 .. 7)
+(typedef "additive expression"
+         (uniont "multiplicative expression"
+                 "1 + 2"))
 
-(cot "specification" 
-    :at "pre condition" (listt "formula") 
-    :at "assigns" (listt (uniont "variable name" "range")) 
-    :at "post condition" "formula")
+(mot "1 + 2"
+     :at 1 "additive expression"
+     :at 2 "multiplicative expression")
 
+(typedef "shift expression"
+         (uniont "additive expression"))
 
-; In development
-(mot "cell" :at "type" "type" :at "value" "C value")
-(mot "var addr" :at )
+(typedef "relational expression"
+         (uniont "shift expression"
+                 "1 < 2"))
+
+(mot "1 < 2"
+     :at 1 "relational expression"
+     :at 2 "shift expression")
+
+(typedef "equality-expression"
+         (uniont "relational expression"))
+
+(typedef "AND expression"
+         (uniont "equality expression"))
+
+(typedef "exclusive OR expression"
+         (uniont "AND expression"))
+
+(typedef "inclusive OR expression"
+         (uniont "exlcusive OR expression"))
+
+(typedef "logical AND expression"
+         (uniont "inclusive OR expression"))
+
+(typedef "logical OR expression"
+         (unionit "logical AND expression"))
+
+(typedef "conditional expression"
+         (uniont "logical OR expression"))
+
+(typedef "assignment expression"
+         (uniont "conditional expression"
+                 "1 = 2"
+                 "1 += 2"))
+
+(mot "1 = 2"
+     :at 1 "unary expression"
+     :at 2 "assignment expression")
+
+(mot "1 += 2"
+     :at 1 "unary expression"
+     :at 2 "assignment expression")
+
+(typedef "expression"
+         (listt "assignment expression"))
+
+;;; Declarations
+
+(typedef "declaration"
+         (uniont "<declaration specifiers> <init declarator list>"))
+
+(mot "<declaration specifiers> <init declarator list>"
+     :at 1 "declaration specifiers"
+     :at 2 "init declarator list")
+
+(typedef "declaration specifiers"
+         (listt "declaration specifier"))
+
+(typedef "declaration specifier"
+         (uniont "type specifier"
+                 "type qualifier"))
+
+(typedef "init declarator list"
+         (listt "init declarator"))
+
+(typedef "type qualifier"
+         (enumt "const"))
+
+(typedef "type specifier"
+         (enumt "void"
+                "int"
+                "float"
+                "__m256"))
+
+(typedef "init declarator"
+         (uniont "declarator"
+                 "<declarator> = <initializer>"))
+
+(mot "declarator"
+     :at 1 "pointer"
+     :at 2 "direct declarator")
+
+(typedef "direct declarator"
+         (uniont "identifier"
+                 "<direct declarator> ( <parameter type list> )"))
+
+(mot "<direct declarator> ( <parameter type list> )"
+     ;; Function definition.
+     :at 1 "direct declarator"
+     :at 2 "parameter type list")
+
+(typedef "parameter type list"
+         (uniont "parameter list"))
+
+(typedef "parameter list"
+         (listt "parameter declaration"))
+
+(typedef "parameter declaration"
+         (uniont "<declaration specifiers> <declarator>"))
+
+(mot "<declaration specifiers> <declarator>"
+     :at 1 "declaration specifiers"
+     :at 2 "declarator")
+
+(typedef "pointer"
+         (uniont "* <type qualifier list>"))
+
+(mot "* <type qualifier list>"
+     :at 1 "type qualifier list")
+
+(typedef "type qualifier list"
+         (listt "type qualifier"))
+
+(mot "<declarator> = <initializer>"
+     :at 1 "declarator"
+     :at 2 "initializer")
+
+(typedef "initializer"
+         (uniont "assignment expression"))
+
+;;; Statements
+
+(typedef "statement"
+         (uniont "iteration statement"
+                 "compound statement"
+                 "expression statement"))
+
+(typedef "expression statement"
+         (uniont "expression"))
+
+(typedef "compound statement"
+         (uniont "block item list"))
+
+(typedef "block item list"
+         (listt "block item"))
+
+(typedef "block item"
+         (uniont "declaration"
+                 "statement"))
+
+(typedef "iteration statement"
+         (uniont "for (1; 2; 3) 4"))
+
+(mot "for (1; 2; 3) 4"
+     :at 1 "declaration"
+     :at 2 "expression"
+     :at 3 "expression"
+     :at 4 "statement")
