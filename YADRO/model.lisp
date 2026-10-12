@@ -4,17 +4,19 @@
 
 ;;; Function definition
 
+; Квалификаторы типа const могут не понадобиться.
+
 (mot "function definition"
      :at "type" "type specifier"
      :at "name" "function name"
      :at "args" (listt "formal argument")
-     :at "body" "compound statement")
+     :at "body" "compound statement") ; Вместо compound statement здесь и дальше сделать listt "statement"
 
 (mot "formal argument"
      :at "q" "type qualifier"
      :at "t" "type specifier"
      :at "p" "pointer"
-     :at "v" "variable name")
+     :at "v" "variable name") ; Пока не думаем о входной переменной вида x[n] (массив), но потом если что расширим.
 
 ;;; Expressions
 
@@ -102,3 +104,5 @@
      :at 2 "1 < 2"
      :at 3 "++1"
      :at 4 "statement")
+
+;;; Annotating constructions
