@@ -11,7 +11,7 @@
 
 
 ;;; Types
-(typedef "type"
+(cot "type"
          :at "c" (enumt "const")
          :at "t" (enumt "void" "int" "float" "__m256")
          :at "p" (enumt "*"))
