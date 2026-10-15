@@ -1,6 +1,6 @@
 ; __mm256 _mm256_setzero_ps(void);
-(mo "func decl" 
-    :av "return type" (co "type" :av "t" "__mm256 type")
+(mo "function definion" 
+    :av "type" (co "type" :av "t" "__mm256 type")
     :av "parameters" (list)
     :av "specification" (mo "specification" 
         :av "pre condition" (list)
