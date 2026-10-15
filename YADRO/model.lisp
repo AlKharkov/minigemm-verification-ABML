@@ -5,16 +5,25 @@
 
 ;;; Names
 (typedef "name" string)
-(typedef "variable name" string)
-(typedef "function name" string)
-(typedef "parameter name" string)
+
+(typedef "variable name" "name")
+
+(typedef "function name" "name")
+
+(typedef "parameter name" "name")
+
+(typedef "constant"
+         (uniont int real))
 
 
 ;;; Types
 (cot "type"
-         :at "c" (enumt "const")
-         :at "t" (enumt "void" "int" "float" "__m256")
-         :at "p" (enumt "*"))
+         :at "qualifier" (enumt "const")
+         :at "specifier" (enumt "void"
+                                "int"
+                                "float"
+                                "__m256")
+         :at "pointer" (enumt "*"))
 
 
 ;;; Function definition
@@ -23,17 +32,25 @@
      :at "name" "function name"
      :at "args" (listt "parameter")
      :at "body" (listt "statement")
-     ; annotiting attribute
+     ;; annotating attribute
      :at "specification" "specification")
 
 (mot "parameter"
-     :at "t" "type"
-     :at "v" "parameter name")
+     :at "type" "type"
+     :at "name" "parameter name")
 
 
 ;;; Expressions
-(typedef "expression" (uniont "variable access" "constant" "1[2]" 
-                              "1*2" "1+2" "1<2" "1=2" "1+=2"))
+(typedef "expression" (uniont "variable access"
+                              "constant"
+                              "1[2]" 
+                              "1*2"
+                              "1+2"
+                              "1<2"
+                              "1=2"
+                              "1+=2"
+                              "++1"
+                              "1(2)"))
 
 (mot "variable access"
      :at "variable" "variable name")
@@ -58,74 +75,81 @@
 (mot "1+=2"
      :at 1 "expression" :at 2 "expression")
 
+(mot "1(2)"
+     :at 1 "function name"
+     :at 2 (listt "expression"))
 
 ;;; Declarations
 (mot "variable declaration"
-     :at "t" "type"
-     :at "v" "variable name"
-     :at "e" "expression")
+     :at "type" "type"
+     :at "name" "variable name"
+     :at "initializer" "expression")
 
 
 ;;; Statements
-(typedef "statement" (uniont "for (1; 2; 3) 4" "variable declaration" "expression"))
+(typedef "statement" (uniont "for (1; 2; 3) 4"
+                             "variable declaration"
+                             "expression"))
 
 (mot "for (1; 2; 3) 4"
-     :at 1 "statement"
+     :at 1 "variable declaration"
      :at 2 "expression"
-     :at 3 "statement"
+     :at 3 "expression"
      :at 4 (listt "statement"))
 
 
-; Annotating constructions
-(typedef "formula" (uniont "and" "or" "not" "exists" "forall" "pcall"))
-(cot "and" :at 1 (listt "formula"))
-(cot "or" :at 1 (listt "formula"))
-(cot "not" :at 1 "formula")
-(cot "exists" :at 1 "variable name" :at 2 "formula")
-(cot "forall" :at 1 "variable name" :at 2 "formula")
-(cot "pcall" :at 1 "name" :at 2 (listt "term"))
+;;; Annotating constructions
+(typedef "formula" (uniont ; Возможно, понадобятся импликации (if, implies, iff).
+                    "and"
+                    "or"
+                    "not"
+                    "exists"
+                    "forall"
+                    "pcall"
+                    "logical constant"
+                    "variable name"))
 
-(cot "range" :at 1 "variable name" :at 2 "expression" :at 3 "expression") ; mem_addr + (0 .. 7)
+(typedef "logical constant"
+         (enumt "true"
+                "false"))
+
+(cot "and" :at 1 (listt "formula"))
+
+(cot "or" :at 1 (listt "formula"))
+
+(cot "not" :at 1 "formula")
+
+(cot "exists"
+     :at 1 "variable name"
+     :at 2 "formula")
+
+(cot "forall"
+     :at 1 "variable name"
+     :at 2 "formula")
+
+(cot "pcall"
+     :at 1 "name"
+     :at 2 (listt "term"))
 
 (cot "specification" 
-    :at "pre condition" (listt "formula") 
-    :at "assigns" (listt (uniont "variable name" "range")) 
-    :at "post condition" "formula")
+     :at "precondition" (listt "formula") 
+     #|:at "assigns" (listt (uniont "variable name"
+                                  "range"))|#
+     ;; Assign-clause вернём потом. Если понадобится. Пока не определились с моделью памяти
+     :at "postcondition" "formula")
 
-; Старое - пусть немного полежит. Скоро можно будет спокойно убирать
-; ; Types
-; (typedef "type" (uniont "int type" "float* type" "const float* type" "void" "__m256 type"))
-; (cot "int type")
-; (cot "float* type")
-; (cot "const float* type")
-; (cot "void")
-; (cot "__m256 type")
+;;; Касательно термов: это зависит от того, в какой логике будем работать. Если в первого порядка, то отдельная сущность терм. Если высшего - "formula" менять на "term".
+;;; Но при этом некоторые доказатели работают в логике первого порядка (и не всегда в обычной), а некоторые в логике высшего порядка (интерактивные).
+;;; То есть придётся писать в одном, и если что поднимать или опускать.
+;;; Подъём до логики высшего порядка как процедура звучит проще. Но при этом если мы перейдём на верхний уровень, то лучше писать в логике высшего порядка.
+;;; Есть третий вариант. Как в ACL2. Если терм nil, то false, если не nil, то true.
 
+;;; Terms
+(typedef "term"
+         (uniont "constant"
+                 "variable name"
+                 "fcall"))
 
-; ; Expressions
-; (typedef "expression" (uniont "C value" "variable acces" "1<2" "1+2" "1*2"))
-; (typedef "C value" (uniont bool int real))
-; (mot "variable acces" :at 1 "variable name")
-; (mot "1<2" :at 1 "expression" :at 2 "expression")
-; (mot "1+2" :at 1 "expression" :at 2 "expression")
-; (mot "1*2" :at 1 "expression" :at 2 "expression")
-; (mot "pointer access" :at 1 "variable name" :at 2 "expression")
-
-
-; ; Declarations
-; (typedef "declaration" (uniont "var decl" "func decl"))
-; (mot "var decl" :at "type" "type" :at "name" "variable name" :at "value" "expression")
-; (mot "func decl" :at "return type" "type" 
-;                  :at "parameters" (listt "parameter") 
-;                  :at "body" "block"
-;                  :at "specification" "specification")  ; annotatiting attribute
-; (mot "parameter" :at "type" "type" :at "name" "parameter name")
-; (mot "block" :at "sts" (listt "statement"))
-
-
-; ; Statements
-; (typedef "statement" (uniont "++1" "for stmt" "var decl" "1=2" "1+=2"))
-; (cot "++1" :at 1 "variable name")
-; (mot "for stmt" :at "init" "statement" :at "condition" "expression" :at "post" "statement" :at "body" "block")
-; (mot "1=2" :at 1 "expression" :at 2 "expression")
-; (mot "1+=2" :at 1 "expression" :at 2 "expression")
+(cot "fcall"
+     :at "function" "function name"
+     :at "args" (listt "term"))
