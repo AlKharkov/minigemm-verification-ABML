@@ -33,14 +33,27 @@
      :at "args" (listt "parameter")
      :at "body" (listt "statement")
      ;; annotating attribute
+     ;; annotating attribute
      :at "specification" "specification")
 
 (mot "parameter"
      :at "type" "type"
      :at "name" "parameter name")
+     :at "type" "type"
+     :at "name" "parameter name")
 
 
 ;;; Expressions
+(typedef "expression" (uniont "variable access"
+                              "constant"
+                              "1[2]" 
+                              "1*2"
+                              "1+2"
+                              "1<2"
+                              "1=2"
+                              "1+=2"
+                              "++1"
+                              "1(2)"))
 (typedef "expression" (uniont "variable access"
                               "constant"
                               "1[2]" 
@@ -85,16 +98,24 @@
      :at "type" "type"
      :at "name" "variable name"
      :at "initializer" "expression")
+     :at "type" "type"
+     :at "name" "variable name"
+     :at "initializer" "expression")
 
 
 ;;; Statements
 (typedef "statement" (uniont "for (1; 2; 3) 4"
                              "variable declaration"
                              "expression"))
+(typedef "statement" (uniont "for (1; 2; 3) 4"
+                             "variable declaration"
+                             "expression"))
 
 (mot "for (1; 2; 3) 4"
      :at 1 "variable declaration"
+     :at 1 "variable declaration"
      :at 2 "expression"
+     :at 3 "expression"
      :at 3 "expression"
      :at 4 (listt "statement"))
 
@@ -114,9 +135,26 @@
          (enumt "true"
                 "false"))
 
+;;; Annotating constructions
+(typedef "formula" (uniont ; Возможно, понадобятся импликации (if, implies, iff).
+                    "and"
+                    "or"
+                    "not"
+                    "exists"
+                    "forall"
+                    "pcall"
+                    "logical constant"
+                    "variable name"))
+
+(typedef "logical constant"
+         (enumt "true"
+                "false"))
+
 (cot "and" :at 1 (listt "formula"))
 
+
 (cot "or" :at 1 (listt "formula"))
+
 
 (cot "not" :at 1 "formula")
 
@@ -135,6 +173,11 @@
 ; predicate decl
 
 (cot "specification" 
+     :at "precondition" (listt "formula") 
+     #|:at "assigns" (listt (uniont "variable name"
+                                  "range"))|#
+     ;; Assign-clause вернём потом. Если понадобится. Пока не определились с моделью памяти
+     :at "postcondition" "formula")
      :at "precondition" (listt "formula") 
      #|:at "assigns" (listt (uniont "variable name"
                                   "range"))|#
