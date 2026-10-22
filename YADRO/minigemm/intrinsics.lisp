@@ -1,4 +1,6 @@
-;;;; A model of the various Intel(R) AVX intrinsics used by gemm_v2 and later.
+#| 
+    A model of the various Intel(R) AVX intrinsics used by gemm_v2 and later.
+|#
 
 
 ; __m256 _mm256_setzero_ps(void);

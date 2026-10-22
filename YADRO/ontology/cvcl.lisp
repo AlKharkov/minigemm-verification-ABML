@@ -12,7 +12,6 @@
      :at "result" "term")
 
 (cot "predicate declaration"
-(cot "predicate declaration"
      :at "name"   "logical predicate name"
      :at "args"   (listt "variable name")
      :at "result" "formula")
@@ -32,17 +31,16 @@
 ;;; ================================
 ; В логическом мире переопределение запрещено.
 (mot "env" 
-     :at "agents"    (listt "agent") ; все агенты над этим окружением
-     :at "pdecls"    (listt "pdecl") ; список деклараций всех предикатов в этом окружении
-     :at "fdecls"    (listt "fdecl")
-     :at "acontexts" :amap "agent" (listt "acontext")
-     :at "cvcs"      (listt "cvc")) ; список порожденных условий корректности
+     :at "agents"     (listt "agent") ; все агенты над этим окружением
+     :at "predicates" (listt "predicate declaration") ; список деклараций всех предикатов в этом окружении
+     :at "functions"  (listt "logical function declaration")
+     :at "acontexts"  :amap "agent" (listt "acontext")
+     :at "cvcs"       (listt "cvc")) ; список порожденных условий корректности
 
 (mot "agent" 
      :at "memory" "memory" ; модель памяти, меняющаяся в процессе исполнения программы
      :at "value"  "term" ; вычисленное на данный момент этим агентом значение
-     :at "precondition" (listt "formula")
-     ;:at "state" "variable name" ; пока не понятно что это такое и зачем нужно
-)
+     :at "state"  "variable name"
+     :at "precondition" (listt "formula"))
 
 ; (typedef "acontext" cot) ; что это должно делать?
