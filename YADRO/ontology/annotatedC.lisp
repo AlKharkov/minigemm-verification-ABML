@@ -1,12 +1,16 @@
-;;;; C language fragment model with annotations
-;;;; A fragment of the C language sufficient for the gemm_v0 and gemm_v1
+#| 
+     C language fragment model with annotations
+     A fragment of the C language sufficient for the gemm_v0 and gemm_v1
 
-;;;; ABML model of the small C fragment employed by gemm_v0, gemm_v1, and gemm_v2.
-;;;; Used to be as close to ISO/IEC 9899:2017 (a draft of C17) as possible.
-;;;; Currently a little less pedantic.
+     ABML model of the small C fragment employed by gemm_v0, gemm_v1, and gemm_v2.
+     Used to be as close to ISO/IEC 9899:2017 (a draft of C17) as possible.
+     Currently a little less pedantic.
+|#
 
 
+;;; ================================
 ;;; Names
+;;; ================================
 (typedef "name" string)
 
 (typedef "variable name" "name")
@@ -16,7 +20,9 @@
 (typedef "parameter name" "name")
 
 
+;;; ================================
 ;;; Types
+;;; ================================
 (cot "type"
      :at "qualifier" (enumt "const")
      :at "specifier" (enumt "void"
@@ -26,7 +32,9 @@
      :at "pointer" (enumt "*"))
 
 
+;;; ================================
 ;;; Function definition
+;;; ================================
 (mot "function definition"
      :at "type" "type"
      :at "name" "function name"
@@ -40,7 +48,9 @@
      :at "name" "parameter name")
 
 
+;;; ================================
 ;;; Expressions
+;;; ================================
 (typedef "expression" (uniont "constant"
                               "variable access"
                               "1[2]" 
@@ -83,14 +93,18 @@
      :at 2 (listt "expression"))
 
 
+;;; ================================
 ;;; Declarations
+;;; ================================
 (mot "variable declaration"
      :at "type" "type"
      :at "name" "variable name"
      :at "initializer" "expression")
 
 
+;;; ================================
 ;;; Statements
+;;; ================================
 (typedef "statement" (uniont "for (1; 2; 3) 4"
                              "variable declaration"
                              "expression"
@@ -103,7 +117,9 @@
      :at 4 (listt "statement"))
 
 
+;;; ================================
 ;;; Memory
+;;; ================================
 (mot "memory" 
      :at "single" :amap "variable name" "cell" ; для отдельных ячеек памяти (число, строка, ссылка)
      :at "tape"   :amap "variable name" (listt "cell")) ; для последовательных участков памяти (массив, структура)
@@ -111,7 +127,9 @@
 (mot "cell" :at "value" "constant")
 
 
+;;; ================================
 ;;; Annotating constructions
+;;; ================================
 (cot "specification" 
      :at "precondition" (listt "formula") 
      ;:at "assigns" (listt (uniont "variable name" "range")) ; вернуться после создания модели памяти
