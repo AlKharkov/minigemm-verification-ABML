@@ -1,4 +1,4 @@
-;;;; The representation of intrinsics in the model being created (the syntax is outdated)
+;;;; A model of the various Intel(R) AVX intrinsics used by gemm_v2 and later.
 
 
 ; __m256 _mm256_setzero_ps(void);
