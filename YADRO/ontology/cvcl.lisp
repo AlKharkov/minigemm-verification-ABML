@@ -12,6 +12,7 @@
      :at "result" "term")
 
 (cot "predicate declaration"
+(cot "predicate declaration"
      :at "name"   "logical predicate name"
      :at "args"   (listt "variable name")
      :at "result" "formula")
