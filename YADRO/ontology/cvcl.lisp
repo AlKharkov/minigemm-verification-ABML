@@ -2,6 +2,8 @@
     Context-carrying Verification Conditions Language (CVCL)
 |#
 
+; lemmas and thories
+; save proofs (sertificates, cache)
 
 ;;; ================================
 ;;; Declarations
