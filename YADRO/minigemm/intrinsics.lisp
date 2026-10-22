@@ -1,3 +1,6 @@
+;;;; The representation of intrinsics in the model being created (the syntax is outdated)
+
+
 ; __mm256 _mm256_setzero_ps(void);
 (mo "function definion" 
     :av "type" (co "type" :av "t" "__mm256 type")
