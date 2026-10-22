@@ -2,12 +2,12 @@
 
 
 ;;; Declarations
-(cot "fdecl"
+(cot "logical function declaration"
      :at "name"   "logical function name"
      :at "args"   (listt "variable name")
      :at "result" "term")
 
-(cot "pdecl"
+(cot "predicate declaration"
      :at "name"   "logical predicate name"
      :at "args"   (listt "variable name")
      :at "result" "formula")
@@ -15,9 +15,9 @@
 
 ;;; CVC
 (mot "cvc" 
-     :at "pdecls" (listt "pdecl") ; список всех деклараций предикатов в данном контексте
-     :at "fdecls" (listt "fdecl")
-     :at "vc"     "formula") ; порожденное условие корректности
+     :at "predicates" (listt "predicate declaration") ; список всех деклараций предикатов в данном контексте
+     :at "functions" (listt "logical function declaration")
+     :at "verification condition" "formula") ; порожденное условие корректности
 
 
 ;;; Agents and environments
