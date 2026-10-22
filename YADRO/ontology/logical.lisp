@@ -23,23 +23,18 @@
      :at "name" "logical function name"
      :at "args" (listt "term"))
 
-(cot "fdecl"
-     :at "name"   "logical function name"
-     :at "args"   (listt "variable name")
-     :at "result" "term")
-
 
 ;;; Formulas
-(typedef "formula" (uniont ; Возможно, понадобятся импликации (if, implies, iff).
-                    "logical constant"
-                    "and"
-                    "or"
-                    "not"
-                    "log1==2"
-                    "variable name"
-                    "exists"
-                    "forall"
-                    "pcall"))
+(typedef "formula" (uniont "logical constant" ; Возможно, понадобятся импликации (if, iff).
+                           "and"
+                           "or"
+                           "not"
+                           "log1==2"
+                           "=>"
+                           "variable name"
+                           "exists"
+                           "forall"
+                           "pcall"))
 
 (typedef "logical constant"
          (enumt "true"
@@ -55,6 +50,10 @@
      :at 1 "formula"
      :at 2 "formula")
 
+(cot "=>"
+     :at 1 "formula"
+     :at 2 "formula")
+
 (cot "exists"
      :at 1 "variable name"
      :at 2 "formula")
@@ -66,8 +65,3 @@
 (cot "pcall"
      :at "name" "logical predicate name"
      :at "args" (listt "term"))
-
-(cot "pdecl"
-     :at "name"   "logical predicate name"
-     :at "args"   (listt "variable name")
-     :at "result" "formula")

@@ -93,7 +93,8 @@
 ;;; Statements
 (typedef "statement" (uniont "for (1; 2; 3) 4"
                              "variable declaration"
-                             "expression"))
+                             "expression"
+                             "annotating statements"))
 
 (mot "for (1; 2; 3) 4"
      :at 1 "variable declaration"
@@ -102,8 +103,29 @@
      :at 4 (listt "statement"))
 
 
+;;; Memory
+(mot "memory" 
+     :at "single" :amap "variable name" "cell" ; для отдельных ячеек памяти (число, строка, ссылка)
+     :at "tape"   :amap "variable name" (listt "cell")) ; для последовательных участков памяти (массив, структура)
+
+(mot "cell" :at "value" "constant")
+
+
 ;;; Annotating constructions
 (cot "specification" 
      :at "precondition" (listt "formula") 
      ;:at "assigns" (listt (uniont "variable name" "range")) ; вернуться после создания модели памяти
      :at "postcondition" "formula")
+
+(typedef "annotating statements" (uniont "assume" 
+                                         "assert" 
+                                         "inv" 
+                                         "inv-loop"))
+
+(cot "assume" :at 1 "formula")
+
+(cot "assert" :at 1 "formula")
+
+(cot "inv" :at 1 "formula")
+
+(cot "inv-loop" :at 1 "formula")
