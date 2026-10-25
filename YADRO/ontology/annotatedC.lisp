@@ -69,11 +69,11 @@
     (:at "variable" "variable name"))
 
 (otype "1[2]"
-    (:at "1" "expression") 
+    (:at "1" "variable name") 
     (:at "2" "expression"))
 
 (otype "++1" 
-    (:at "1" "expression"))
+    (:at "1" "variable name"))
 
 (otype "1*2"
     (:at "1" "expression")
