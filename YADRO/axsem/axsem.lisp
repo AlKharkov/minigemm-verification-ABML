@@ -10,15 +10,15 @@
 ;;; Expressions
 ;;; ================================
 ;; Constant
-(aspect "axsem" :type "constant" :instance i :do i)
+(action "axsem" "constant" nil 
+    (:seq (:instance i)) 
+    i)
 
 ;; Variable access
-(aspect "axsem" :type "variable access" :instance i 
-    :agent a :ap a "state" st :do 
-    (mo "fcall" 
+(action "axsem" "variable access" nil
+    (:seq (:instance i) (:agent a) (:let st a "state"))
+    (ob "fcall" 
         :av "name" "loc-val"
         :av "args" (list st 
-                         (mo "fcall" :av "name" "var-loc" 
-                                     :av "args" (list st (aget i "variable")))))
-)
-
+                         (ob "fcall" :av "name" "var-loc" 
+                                     :av "args" (list st (aget i "variable"))))))

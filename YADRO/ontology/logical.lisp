@@ -20,20 +20,19 @@
 ;;; ================================
 ;;; Terms
 ;;; ================================
-(typedef "term"
-         (uniont "constant"
-                 "variable name"
-                 "fcall"))
+(typedef "term" (:union "constant"
+                        "variable name" 
+                        "fcall"))
 
-(cot "fcall"
-     :at "name" "logical function name"
-     :at "args" (listt "term"))
+(otype "fcall"
+    (:at "name" "logical function name")
+    (:at "args" (:list "term")))
 
 
 ;;; ================================
 ;;; Formulas
 ;;; ================================
-(typedef "formula" (uniont "logical constant" ; Возможно, понадобятся импликации (if, iff).
+(typedef "formula" (:union "logical constant" ; Возможно, понадобятся импликации (if, iff).
                            "and"
                            "or"
                            "not"
@@ -44,32 +43,34 @@
                            "forall"
                            "pcall"))
 
-(typedef "logical constant"
-         (enumt "true"
-                "false"))
+(typedef "logical constant" (:enum "true"
+                                   "false"))
 
-(cot "and" :at 1 (listt "formula"))
+(otype "and" 
+    (:at "1" (:list "formula")))
 
-(cot "or" :at 1 (listt "formula"))
+(otype "or" 
+    (:at "1" (:list "formula")))
 
-(cot "not" :at 1 "formula")
+(otype "not" 
+    (:at "1" "formula"))
 
-(cot "log1==2" 
-     :at 1 "formula"
-     :at 2 "formula")
+(otype "log1==2" 
+    (:at "1" "formula")
+    (:at "2" "formula"))
 
-(cot "=>"
-     :at 1 "formula"
-     :at 2 "formula")
+(otype "=>"
+    (:at "1" "formula")
+    (:at "2" "formula"))
 
-(cot "exists"
-     :at 1 "variable name"
-     :at 2 "formula")
+(otype "exists"
+    (:at "1" "variable name")
+    (:at "2" "formula"))
 
-(cot "forall"
-     :at 1 "variable name"
-     :at 2 "formula")
+(otype "forall"
+    (:at "1" "variable name")
+    (:at "2" "formula"))
 
-(cot "pcall"
-     :at "name" "logical predicate name"
-     :at "args" (listt "term"))
+(otype "pcall"
+    (:at "name" "logical predicate name")
+    (:at "args" (:list "term")))

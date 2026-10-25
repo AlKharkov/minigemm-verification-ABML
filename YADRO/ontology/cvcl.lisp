@@ -8,41 +8,41 @@
 ;;; ================================
 ;;; Declarations
 ;;; ================================
-(cot "logical function declaration"
-     :at "name"   "logical function name"
-     :at "args"   (listt "variable name")
-     :at "result" "term")
+(otype "logical function declaration"
+    (:at "name"   "logical function name")
+    (:at "args"   (:list "variable name"))
+    (:at "result" "term"))
 
-(cot "predicate declaration"
-     :at "name"   "logical predicate name"
-     :at "args"   (listt "variable name")
-     :at "result" "formula")
+(otype "predicate declaration"
+    (:at "name"   "logical predicate name")
+    (:at "args"   (:list "variable name"))
+    (:at "result" "formula"))
 
 
 ;;; ================================
 ;;; CVC
 ;;; ================================
-(mot "cvc" 
-     :at "predicates" (listt "predicate declaration") ; список всех деклараций предикатов в данном контексте
-     :at "functions"  (listt "logical function declaration")
-     :at "verification condition" "formula") ; порожденное условие корректности
+(otype "cvc" 
+    (:at "predicates" (:list "predicate declaration")) ; список всех деклараций предикатов в данном контексте
+    (:at "functions"  (:list "logical function declaration"))
+    (:at "verification condition" "formula")) ; порожденное условие корректности
 
 
 ;;; ================================
 ;;; Agents and environments
 ;;; ================================
 ; В логическом мире переопределение запрещено.
-(mot "env" 
-     :at "agents"     (listt "agent") ; все агенты над этим окружением
-     :at "predicates" (listt "predicate declaration") ; список деклараций всех предикатов в этом окружении
-     :at "functions"  (listt "logical function declaration")
-     :at "acontexts"  :amap "agent" (listt "acontext")
-     :at "cvcs"       (listt "cvc")) ; список порожденных условий корректности
+(otype "env" 
+    (:at "agents"     (:list "agent")) ; все агенты над этим окружением
+    (:at "predicates" (:list "predicate declaration")) ; список деклараций всех предикатов в этом окружении
+    (:at "functions"  (:list "logical function declaration"))
+    (:at "cvcs"       (:list "cvc"))) ; список порожденных условий корректности
+    (:at "agent actions" (:map "agent" (:list "action")))
 
-(mot "agent" 
-     :at "memory" "memory" ; модель памяти, меняющаяся в процессе исполнения программы
-     :at "value"  "term" ; вычисленное на данный момент этим агентом значение
-     :at "state"  "variable name"
-     :at "precondition" (listt "formula"))
+(typedef "action" obtype)
 
-; (typedef "acontext" cot) ; что это должно делать?
+(otype "agent" 
+    (:at "memory" "memory") ; модель памяти, меняющаяся в процессе исполнения программы
+    (:at "value"  "term") ; вычисленное на данный момент этим агентом значение
+    (:at "state"  "variable name")
+    (:at "precondition" (:list "formula")))

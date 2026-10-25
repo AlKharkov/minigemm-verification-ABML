@@ -23,35 +23,35 @@
 ;;; ================================
 ;;; Types
 ;;; ================================
-(cot "type"
-     :at "qualifier" (enumt "const")
-     :at "specifier" (enumt "void"
+(otype "type"
+    (:at "qualifier" (:enum "const"))
+    (:at "specifier" (:enum "void"
                             "int"
                             "float"
-                            "__m256")
-     :at "pointer" (enumt "*"))
+                            "__m256"))
+    (:at "pointer" (:enum "*")))
 
 
 ;;; ================================
 ;;; Function definition
 ;;; ================================
-(mot "function definition"
-     :at "type" "type"
-     :at "name" "function name"
-     :at "args" (listt "parameter")
-     :at "body" (listt "statement")
-     ;; annotating attribute
-     :at "specification" "specification")
+(otype "function definition"
+    (:at "type" "type")
+    (:at "name" "function name")
+    (:at "args" (:list "parameter"))
+    (:at "body" (:list "statement"))
+    ;; annotating attribute
+    (:at "specification" "specification"))
 
-(mot "parameter"
-     :at "type" "type"
-     :at "name" "parameter name")
+(otype "parameter"
+    (:at "type" "type")
+    (:at "name" "parameter name"))
 
 
 ;;; ================================
 ;;; Expressions
 ;;; ================================
-(typedef "expression" (uniont "constant"
+(typedef "expression" (:union "constant"
                               "variable access"
                               "1[2]" 
                               "1*2"
@@ -62,88 +62,100 @@
                               "++1"
                               "1(2)"))
 
-(typedef "constant" (uniont int 
+(typedef "constant" (:union int 
                             real))
 
-(mot "variable access"
-     :at "variable" "variable name")
+(otype "variable access"
+    (:at "variable" "variable name"))
 
-(mot "1[2]"
-     :at 1 "expression" :at 2 "expression")
+(otype "1[2]"
+    (:at "1" "expression") 
+    (:at "2" "expression"))
 
-(mot "++1" :at 1 "expression")
+(otype "++1" 
+    (:at "1" "expression"))
 
-(mot "1*2"
-     :at 1 "expression" :at 2 "expression")
+(otype "1*2"
+    (:at "1" "expression")
+    (:at "2" "expression"))
 
-(mot "1+2"
-     :at 1 "expression" :at 2 "expression")
+(otype "1+2"
+    (:at "1" "expression")
+    (:at "2" "expression"))
 
-(mot "1<2"
-     :at 1 "expression" :at 2 "expression")
+(otype "1<2"
+    (:at "1" "expression")
+    (:at "2" "expression"))
 
-(mot "1=2"
-     :at 1 "expression" :at 2 "expression")
+(otype "1=2"
+    (:at "1" "expression")
+    (:at "2" "expression"))
 
-(mot "1+=2"
-     :at 1 "expression" :at 2 "expression")
+(otype "1+=2"
+    (:at "1" "expression")
+    (:at "2" "expression"))
 
-(mot "1(2)"
-     :at 1 "function name"
-     :at 2 (listt "expression"))
+(otype "1(2)"
+    (:at "1" "function name")
+    (:at "2" (:list "expression")))
 
 
 ;;; ================================
 ;;; Declarations
 ;;; ================================
-(mot "variable declaration"
-     :at "type" "type"
-     :at "name" "variable name"
-     :at "initializer" "expression")
+(otype "variable declaration"
+    (:at "type" "type")
+    (:at "name" "variable name")
+    (:at "initializer" "expression"))
 
 
 ;;; ================================
 ;;; Statements
 ;;; ================================
-(typedef "statement" (uniont "for (1; 2; 3) 4"
+(typedef "statement" (:union "for (1; 2; 3) 4"
                              "variable declaration"
                              "expression"
                              "annotating statements"))
 
-(mot "for (1; 2; 3) 4"
-     :at 1 "variable declaration"
-     :at 2 "expression"
-     :at 3 "expression"
-     :at 4 (listt "statement"))
+(otype "for (1; 2; 3) 4"
+    (:at "1" "variable declaration")
+    (:at "2" "expression")
+    (:at "3" "expression")
+    (:at "4" (:list "statement")))
 
 
 ;;; ================================
 ;;; Memory
 ;;; ================================
-(mot "memory" 
-     :at "single" :amap "variable name" "cell" ; для отдельных ячеек памяти (число, строка, ссылка)
-     :at "tape"   :amap "variable name" (listt "cell")) ; для последовательных участков памяти (массив, структура)
+(otype "memory" 
+    (:at "single" (:map "variable name" "cell")) ; для отдельных ячеек памяти (число, строка, ссылка)
+    (:at "tape"   (:map "variable name" (:list "cell")))) ; для последовательных участков памяти (массив, структура)
 
-(mot "cell" :at "value" "constant")
+(otype "cell" 
+    (:at "value" "constant"))
 
 
 ;;; ================================
 ;;; Annotating constructions
 ;;; ================================
-(cot "specification" 
-     :at "precondition" (listt "formula") 
-     ;:at "assigns" (listt (uniont "variable name" "range")) ; вернуться после создания модели памяти
-     :at "postcondition" "formula")
+(otype "specification" 
+    (:at "precondition" (:list "formula"))
+    ;:at "assigns" (:list (:union "variable name" "range")) ; вернуться после создания модели памяти
+    (:at "postcondition" "formula"))
 
-(typedef "annotating statements" (uniont "assume" 
+(typedef "annotating statements" (:union "assume" 
                                          "assert" 
                                          "inv" 
                                          "inv-loop"))
 
-(cot "assume" :at 1 "formula")
+(otype "assume" 
+    (:at "1" "formula"))
 
-(cot "assert" :at 1 "formula")
+(otype "assert" 
+    (:at "1" "formula"))
 
-(cot "inv" :at 1 "formula")
+(otype "inv" 
+    (:at "1" "formula"))
 
-(cot "inv-loop" :at 1 "formula")
+(otype "inv-loop" 
+    (:at "1" "formula"))
