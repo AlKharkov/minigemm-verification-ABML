@@ -42,7 +42,7 @@
 (typedef "action" obtype)
 
 (otype "agent" 
-    (:at "memory" "memory") ; модель памяти, меняющаяся в процессе исполнения программы
+    ; (:at "memory" "memory") ; модель памяти, меняющаяся в процессе исполнения программы - нужно для операционной, не аксиоматической
     (:at "value"  "term") ; вычисленное на данный момент этим агентом значение
     (:at "state"  "variable name")
     (:at "precondition" (:list "formula")))
