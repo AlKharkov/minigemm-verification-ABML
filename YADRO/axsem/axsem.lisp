@@ -1,9 +1,11 @@
 #| 
     Axiomatic semantics
 
-    "loc-val" = :amap "cell" "constant" = отношение ячеек памяти в их значения
-    "var-loc" = :amap "variable name" "cell" = отношение имен переменных в ячейки памяти, на которые они ссылкаются
-    ":=" = функция присваивания
+    "var-loc"  ~ (:map "variable name" "cell") - отношение имен переменных в ячейки памяти, на которые они ссылкаются
+    "loc-val"  ~ (:map "cell" "constant") - отношение ячеек памяти в их значения
+    "var-tape" ~ (:map "variable name" (:list "cell")) - аналогично выше для лент
+    "tape-loc" ~ (:map [(:list "cell"), nat] "cell") - функция трёх аргументов: состояние, лента и индекс элемента в ленте, возвращающая искомую ячейку
+    ":=" - функция присваивания
 |#
 
 
@@ -20,14 +22,61 @@
 ;; Variable access
 (action "axsem" "variable access" nil
     (:seq (:instance i) (:agent a) (:let st a "state"))
-    (ob "fcall" 
+    (ob "fcall" ; loc-val(st, var-loc(st, i_variable))
         :av "name" "loc-val" ; получить значение по ячейке памяти
         :av "args" (list st 
                          (ob "fcall" :av "name" "var-loc" ; получить ячейку памяти по имени переменной
                                      :av "args" (list st (aget i "variable"))))))
 
 
+(action "axsem::lvalue" "variable access" nil
+    (:seq (:instance i) (:agent a) (:let st a "state"))
+    (ob "fcall" ; var-loc(st, i_variable)
+        :av "name" "var-loc" ; получить ячейку памяти по имени переменной
+        :av "args" (list st (aget i "variable"))))
+
+
 ; Index expression | 1[2]
+(action "axsem" "1[2]" nil
+    (:seq (:action ac))
+    (update-push-action ac (:av "stage" "execute 2")))
+
+(action "axsem" "1[2]" "execute 2" ; вычисляет терм - значение второго аргумента
+    (:seq (:action ac) (:instance i) (:let e2 i "2"))
+    (:seq
+        (update-push-action ac (:av "stage" "access"))
+        (clear-update-eval-action ac (:av "instance" e2))))
+
+(action "axsem" "1[2]" "access" ; name1[v2]
+    (:seq (:instance i) (:let name1 i "name") (:value v2) (:agent a) (:let st a "state"))
+    (ob "fcall" ; loc-val(st, tape-loc(st, var-tape(st, name1), v2))
+        (:av "name" "loc-val")
+        (:av "args" (list st
+                    (ob "fcall" (:av "name" "tape-loc")
+                                (:av "args" (list st 
+                                                  (ob "fcall" (:av "name" "var-tape")
+                                                              (:av "args" st name1))
+                                                  v2)))))))
+
+
+(action "axsem::lvalue" "1[2]" nil
+    (:seq (:action ac))
+    (update-push-action ac (:av "stage" "execute 2")))
+
+(action "axsem::lvalue" "1[2]" "execute 2" ; вычисляет терм - значение второго аргумента
+    (:seq (:action ac) (:instance i) (:let e2 i "2"))
+    (:seq
+        (update-push-action ac (:av "stage" "access"))
+        (clear-update-eval-action ac (:av "action" "axsem") (:av "instance" e2))))
+
+(action "axsem::lvalue" "1[2]" "access" ; name1[v2]
+    (:seq (:instance i) (:let name1 i "name") (:value v2) (:agent a) (:let st a "state"))
+    (ob "fcall" ; tape-loc(st, var-tape(st, name1), v2)
+        (:av "name" "tape-loc")
+        (:av "args" (list st 
+                          (ob "fcall" (:av "name" "var-tape")
+                                      (:av "args" st name1))
+                          v2))))
 
 
 ; Increment expression | ++1
