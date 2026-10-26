@@ -128,8 +128,12 @@
 ;;; Memory
 ;;; ================================
 (otype "memory" 
+    ; memory model like in C
     (:at "single" (:map "variable name" "cell")) ; для отдельных ячеек памяти (число, строка, ссылка)
-    (:at "tape"   (:map "variable name" (:list "cell")))) ; для последовательных участков памяти (массив, структура)
+    (:at "tape"   (:map "variable name" (:list "cell"))) ; для последовательных участков памяти (массив)
+    ; memory model like in Pascal
+    (:at "single math" (:map "variable name" "constant"))
+    (:at "tape math" (:map "variable name" (:list "constant"))))
 
 (otype "cell" 
     (:at "value" "constant"))

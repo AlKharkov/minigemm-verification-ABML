@@ -1,11 +1,16 @@
 #| 
     Axiomatic semantics
 
-    "var-loc"  ~ (:map "variable name" "cell") - отношение имен переменных в ячейки памяти, на которые они ссылкаются
-    "loc-val"  ~ (:map "cell" "constant") - отношение ячеек памяти в их значения
-    "var-tape" ~ (:map "variable name" (:list "cell")) - аналогично выше для лент
-    "tape-loc" ~ (:map [(:list "cell"), nat] "cell") - функция трёх аргументов: состояние, лента и индекс элемента в ленте, возвращающая искомую ячейку
-    ":=" - функция присваивания
+    Для Си модели памяти:
+    var-loc(st, var_name) => "cell" - получить ячейку памяти по имени переменной
+    loc-val(st, cell) => "constant" - получить значение по ячейке памяти
+    tape-loc(st, tape_name, ind) => "cell" - получить ячейку памяти в ленте tape_name по индексу ind
+    
+    Для модели памяти как в Pascal:
+    var-val(st, var_name) => "constant" - значение переменной
+    tape-val(st, tape_name, ind) => "constant" - значение ленты name по индексу ind
+
+    ":=" - функция присваивания, которая впоследствии преобразится в st1 = upd(st, var_name, new_value)
 |#
 
 
@@ -49,14 +54,11 @@
 
 (action "axsem" "1[2]" "access" ; name1[v2]
     (:seq (:instance i) (:let name1 i "name") (:value v2) (:agent a) (:let st a "state"))
-    (ob "fcall" ; loc-val(st, tape-loc(st, var-tape(st, name1), v2))
+    (ob "fcall" ; loc-val(st, tape-loc(st, name1, v2))
         (:av "name" "loc-val")
         (:av "args" (list st
                     (ob "fcall" (:av "name" "tape-loc")
-                                (:av "args" (list st 
-                                                  (ob "fcall" (:av "name" "var-tape")
-                                                              (:av "args" st name1))
-                                                  v2)))))))
+                                (:av "args" (list st name1 v2)))))))
 
 
 (action "axsem::lvalue" "1[2]" nil
@@ -71,12 +73,9 @@
 
 (action "axsem::lvalue" "1[2]" "access" ; name1[v2]
     (:seq (:instance i) (:let name1 i "name") (:value v2) (:agent a) (:let st a "state"))
-    (ob "fcall" ; tape-loc(st, var-tape(st, name1), v2)
+    (ob "fcall" ; tape-loc(st, name1, v2)
         (:av "name" "tape-loc")
-        (:av "args" (list st 
-                          (ob "fcall" (:av "name" "var-tape")
-                                      (:av "args" st name1))
-                          v2))))
+        (:av "args" (list st name1 v2))))
 
 
 ; Increment expression | ++1
