@@ -1,5 +1,5 @@
 #| 
-    Context-carrying Verification Conditions Language (CVCL)
+    Context-aware Verification Conditions Language (CVCL)
 |#
 
 ; lemmas and thories
