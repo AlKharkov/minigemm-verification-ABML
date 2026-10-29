@@ -41,7 +41,7 @@
         :av "args" (list st (aget i "variable"))))
 
 
-; Index expression | 1[2]
+; Array indirection | 1[2]
 (action "axsem" "1[2]" nil
     (:seq (:action ac))
     (update-push-action ac (:av "stage" "execute 2")))
