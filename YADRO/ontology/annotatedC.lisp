@@ -66,7 +66,12 @@
                             real))
 
 (otype "variable access"
-    (:at "variable" "variable name"))
+    (:at "variable" "variable name")
+    (:at "memory type" "memory type"))
+
+(typedef "memory type" (:enum "C" 
+                              "math" 
+                              "register"))
 
 (otype "1[2]"
     (:at "1" "variable name") 
@@ -87,13 +92,23 @@
     (:at "1" "expression")
     (:at "2" "expression"))
 
-(otype "1=2"
-    (:at "1" "expression")
+(otype "varname=2"
+    (:at "1" "variable access")
     (:at "2" "expression"))
 
-(otype "1+=2"
-    (:at "1" "expression")
+(otype "1[2]=3"
+    (:at "1" "variable access")
+    (:at "2" "expression")
+    (:at "3" "expression"))
+
+(otype "varname+=2"
+    (:at "1" "variable access")
     (:at "2" "expression"))
+
+(otype "1[2]+=3"
+    (:at "1" "variable access")
+    (:at "2" "expression")
+    (:at "3" "expression"))
 
 (otype "1(2)"
     (:at "1" "function name")
@@ -133,7 +148,11 @@
     (:at "tape"   (:map "variable name" (:list "cell"))) ; для последовательных участков памяти (массив)
     ; memory model like in Pascal
     (:at "single math" (:map "variable name" "constant"))
-    (:at "tape math" (:map "variable name" (:list "constant"))))
+    (:at "tape math" (:map "variable name" (:list "constant")))
+    ; registers __m256
+    ; считаем все регистры выровненными; регистры не пересекаются
+    ; при каждом появлении нового регистра - появляется абсолютно новый (переписать адекватно)
+    (:at "__m256" (:map "variable name" (:list "constant"))))
 
 (otype "cell" 
     (:at "value" "constant"))

@@ -37,12 +37,25 @@
     (:at "predicates" (:list "predicate declaration")) ; список деклараций всех предикатов в этом окружении
     (:at "functions"  (:list "logical function declaration"))
     (:at "cvcs"       (:list "cvc"))) ; список порожденных условий корректности
-    (:at "agent actions" (:map "agent" (:list "action")))
+    ; result of static analysis
+    (:at "variable type" (:amap "variable name" "memory type"))
 
 (typedef "action" obtype)
 
 (otype "agent" 
     ; (:at "memory" "memory") ; модель памяти, меняющаяся в процессе исполнения программы - нужно для операционной, не аксиоматической
+    (:at "env" "env")
+    (:at "actions" (:list "action"))
     (:at "value"  "term") ; вычисленное на данный момент этим агентом значение
-    (:at "state"  "variable name")
+    (:at "stateC"  "variable name") ; переменная состояния для С памяти
+    (:at "stateM"  "variable name") ; переменная состояния для математической, на подобии Pascal, памяти,
+    (:at "stateR"  "variable name") ; переменная состояния для регистровой памяти
     (:at "precondition" (:list "formula")))
+
+
+;;; ================================
+;;; Lemmas
+;;; ================================
+(otype "lemma"
+    ; Check smtlib2
+)
